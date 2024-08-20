@@ -451,15 +451,14 @@ fivenum(getValues(r_ckm2$value$mw_mae))
 r_dat$value$locI  <- r_dat$value$count
 r_ckm1$value$locI <- r_ckm1$value$count
 r_ckm2$value$locI <- r_ckm2$value$count
-r_dat$value$locI  <- setValues(r_dat$value$locI,  
-                               get_localmoranI(r_dat$value$count, type = "queen",
-                                               zero.policy = TRUE)[, 1])
-r_ckm1$value$locI <- setValues(r_ckm1$value$locI, 
-                               get_localmoranI(r_ckm1$value$count, type = "queen",
-                                               zero.policy = TRUE)[, 1])
-r_ckm2$value$locI <- setValues(r_ckm2$value$locI, 
-                               get_localmoranI(r_ckm2$value$count, type = "queen",
-                                               zero.policy = TRUE)[, 1])
+locI_dat  <- get_localmoranI(r_dat$value$count,  type = "queen", zero.policy = TRUE)
+locI_ckm1 <- get_localmoranI(r_ckm1$value$count, type = "queen", zero.policy = TRUE)
+locI_ckm2 <- get_localmoranI(r_ckm2$value$count, type = "queen", zero.policy = TRUE)
+
+# keeping only significant local Moran's I values
+r_dat$value$locI  <- setValues(r_dat$value$locI, ifelse(locI_dat[, 5]  <= 0.05, locI_dat[, 1],  NA))
+r_ckm1$value$locI <- setValues(r_dat$value$locI, ifelse(locI_ckm1[, 5] <= 0.05, locI_ckm1[, 1], NA))
+r_ckm2$value$locI <- setValues(r_dat$value$locI, ifelse(locI_ckm2[, 5] <= 0.05, locI_ckm2[, 1], NA))
 
 # map view
 r_locIfa <- rbind(as.data.frame(crop(r_dat$value$locI, fa1), xy = TRUE) %>%
